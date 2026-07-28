@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuestra Boda</title>
-  <!-- Fuentes elegantes desde Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Mi Graduación</title>
+  <!-- Fuentes modernas y elegantes desde Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,15 +29,16 @@
     h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 2.5rem;
-      color: #4a5d4e;
-      margin-bottom: 10px;
+      color: #2b3a4a;
+      margin-bottom: 5px;
     }
     .subtitle {
       font-size: 0.95rem;
       color: #777;
       margin-bottom: 25px;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
+      font-weight: 500;
     }
     .divider {
       height: 1px;
@@ -46,8 +47,8 @@
     }
     /* Estilos del Recuadro de Pase */
     .pases-box {
-      background-color: #f0f4f1;
-      border: 1px solid #d1ded3;
+      background-color: #f0f3f6;
+      border: 1px solid #d1d9e0;
       padding: 15px;
       border-radius: 10px;
       margin-bottom: 20px;
@@ -62,7 +63,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.6rem;
       font-weight: 600;
-      color: #2c3e30;
+      color: #1c2833;
       margin-top: 5px;
     }
     /* Formulario */
@@ -88,11 +89,11 @@
       transition: border 0.3s;
     }
     select:focus, textarea:focus {
-      border-color: #4a5d4e;
+      border-color: #2b3a4a;
     }
     .btn-submit {
       width: 100%;
-      background-color: #4a5d4e;
+      background-color: #2b3a4a;
       color: white;
       border: none;
       padding: 14px;
@@ -104,10 +105,10 @@
       transition: background 0.3s;
     }
     .btn-submit:hover {
-      background-color: #38473b;
+      background-color: #1e2934;
     }
     .btn-submit:disabled {
-      background-color: #a0aaa2;
+      background-color: #8a96a3;
       cursor: not-allowed;
     }
     #statusMsg {
@@ -120,11 +121,11 @@
 <body>
 
   <div class="card">
-    <h1>¡Nos Casamos!</h1>
-    <p class="subtitle">Nuestra Boda</p>
+    <h1>🎓 ¡Mi Graduación!</h1>
+    <p class="subtitle">Celebración Académica</p>
     
     <p style="font-size: 0.95rem; color: #555; line-height: 1.5;">
-      Queremos compartir este día tan especial con ustedes. Por favor confirma tu asistencia a continuación.
+      Alcanzar este logro es muy especial para mí y me encantaría celebrarlo contigo. Por favor confirma tu asistencia a continuación.
     </p>
 
     <div class="divider"></div>
@@ -149,13 +150,13 @@
       <div class="form-group" id="pasesContainer" style="display: none;">
         <label for="pasesSelect">¿Cuántos pases utilizarás?</label>
         <select id="pasesSelect">
-          <!-- Las opciones exactas se generarán dinámicamente -->
+          <!-- Las opciones se generan según el enlace dinámico -->
         </select>
       </div>
 
       <div class="form-group">
-        <label for="mensaje">Mensaje para los novios (Opcional):</label>
-        <textarea id="mensaje" rows="3" placeholder="Escribe un mensaje bonito..."></textarea>
+        <label for="mensaje">Mensaje para el graduado (Opcional):</label>
+        <textarea id="mensaje" rows="3" placeholder="Escribe unas palabras de felicitación..."></textarea>
       </div>
 
       <button type="button" id="btnSubmit" class="btn-submit" onclick="enviarRSVP()">Enviar Respuesta</button>
@@ -204,7 +205,7 @@
 
       // Bloquear botón y notificar procesamiento
       btnSubmit.disabled = true;
-      statusMsg.style.color = "#4a5d4e";
+      statusMsg.style.color = "#2b3a4a";
       statusMsg.innerText = "Guardando tu respuesta...";
 
       const payload = {
@@ -221,7 +222,7 @@
         body: JSON.stringify(payload)
       })
       .then(() => {
-        statusMsg.style.color = "#2c3e30";
+        statusMsg.style.color = "#1c2833";
         statusMsg.innerText = "¡Muchas gracias! Tu confirmación ha sido guardada.";
         document.getElementById('rsvpForm').reset();
         document.getElementById('pasesContainer').style.display = 'none';
