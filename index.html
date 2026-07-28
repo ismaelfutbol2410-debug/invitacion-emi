@@ -106,6 +106,10 @@
     .btn-submit:hover {
       background-color: #38473b;
     }
+    .btn-submit:disabled {
+      background-color: #a0aaa2;
+      cursor: not-allowed;
+    }
     #statusMsg {
       margin-top: 15px;
       font-size: 0.9rem;
@@ -137,7 +141,7 @@
         <label for="asistencia">¿Confirmas tu asistencia?</label>
         <select id="asistencia" onchange="togglePases(this.value)" required>
           <option value="">Selecciona una opción</option>
-          <option value="Confirmado">Sí, ahí estaré / estarémos</option>
+          <option value="Confirmado">Sí, ahí estaré / estaremos</option>
           <option value="Declinado">Lo siento, no podré asistir</option>
         </select>
       </div>
@@ -145,7 +149,7 @@
       <div class="form-group" id="pasesContainer" style="display: none;">
         <label for="pasesSelect">¿Cuántos pases utilizarás?</label>
         <select id="pasesSelect">
-          <!-- Las opciones exactas se generarán solas aquí -->
+          <!-- Las opciones exactas se generarán dinámicamente -->
         </select>
       </div>
 
@@ -154,25 +158,26 @@
         <textarea id="mensaje" rows="3" placeholder="Escribe un mensaje bonito..."></textarea>
       </div>
 
-      <button type="button" class="btn-submit" onclick="enviarRSVP()">Enviar Respuesta</button>
+      <button type="button" id="btnSubmit" class="btn-submit" onclick="enviarRSVP()">Enviar Respuesta</button>
     </form>
 
     <div id="statusMsg"></div>
   </div>
 
   <script>
-    // Tu enlace de Google Apps Script ya configurado correctamente
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-KG7hudHYQ_oG7zGPw1OYFRr13pp26d0SV9d-NcGLWvV3A3dhbbUUlEQQ6_ci4wt9xg/exec";
 
-    // Extrae 'nombre' y 'pases' de la URL del enlace
+    // Extrae y decodifica 'nombre' y 'pases' de la URL correctamente
     const urlParams = new URLSearchParams(window.location.search);
-    const nombreInvitado = urlParams.get('nombre') || "Invitado Especial";
-    const maxPases = parseInt(urlParams.get('pases')) || 1; 
+    const rawNombre = urlParams.get('nombre');
+    const nombreInvitado = rawNombre ? decodeURIComponent(rawNombre) : "Invitado Especial";
+    const parsedPases = parseInt(urlParams.get('pases'), 10);
+    const maxPases = (!isNaN(parsedPases) && parsedPases > 0) ? parsedPases : 1; 
 
-    // Muestra el nombre del invitado en pantalla
+    // Muestra el nombre del invitado
     document.getElementById('nombreInvitado').innerText = nombreInvitado;
 
-    // Genera SOLAMENTE hasta la cantidad exacta de pases permitidos
+    // Genera la lista de pases según la cantidad recibida
     const pasesSelect = document.getElementById('pasesSelect');
     for (let i = 1; i <= maxPases; i++) {
       let opt = document.createElement('option');
@@ -181,21 +186,24 @@
       pasesSelect.appendChild(opt);
     }
 
-    // Muestra u oculta la selección de número de pases
+    // Muestra u oculta la selección de pases
     function togglePases(val) {
       document.getElementById('pasesContainer').style.display = (val === 'Confirmado') ? 'block' : 'none';
     }
 
-    // Envía la información a tu Google Sheet
+    // Envía la respuesta a Google Sheets
     function enviarRSVP() {
       const asistencia = document.getElementById('asistencia').value;
       const statusMsg = document.getElementById('statusMsg');
+      const btnSubmit = document.getElementById('btnSubmit');
 
       if (!asistencia) {
         alert("Por favor selecciona si asistirás.");
         return;
       }
 
+      // Bloquear botón y notificar procesamiento
+      btnSubmit.disabled = true;
       statusMsg.style.color = "#4a5d4e";
       statusMsg.innerText = "Guardando tu respuesta...";
 
@@ -213,15 +221,17 @@
         body: JSON.stringify(payload)
       })
       .then(() => {
-        statusMsg.style.color = "green";
+        statusMsg.style.color = "#2c3e30";
         statusMsg.innerText = "¡Muchas gracias! Tu confirmación ha sido guardada.";
         document.getElementById('rsvpForm').reset();
         document.getElementById('pasesContainer').style.display = 'none';
+        btnSubmit.disabled = false;
       })
       .catch(error => {
-        statusMsg.style.color = "red";
+        statusMsg.style.color = "#a94442";
         statusMsg.innerText = "Hubo un error al enviar. Inténtalo de nuevo.";
-        console.error(error);
+        console.error("Error en RSVP:", error);
+        btnSubmit.disabled = false;
       });
     }
   </script>
